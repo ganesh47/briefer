@@ -17,4 +17,4 @@ Briefer is an iOS app for concise lessons, quizzes, and spaced-repetition review
 
 ## Pre-Init Status
 
-This repo is intentionally in pre-init. The next step is to choose the iOS app scaffold and convert the product brief into implementation issues.
+This repo is intentionally in pre-init. The first architecture decision is captured in `docs/architecture.md`; the next implementation step is to generate the iOS scaffold and validate it with Xcode.

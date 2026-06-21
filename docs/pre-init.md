@@ -26,8 +26,12 @@ Build an iOS app experience for durable learning: brief lessons, quizzes, spaced
 - First prototype: generic sample learning domain.
 - Later expansion: additional brief-based learning domains through private or approved-public content packs.
 
+## Architecture Decision
+
+The first prototype will use an iOS-first SwiftUI architecture with a local-first store, pure domain models, generic seed fixtures, and scheduler logic that can be tested independently from UI. See `docs/architecture.md`.
+
 ## Open Decisions
 
-- Whether the first prototype is local-only or backed by a tiny sync/API layer.
-- Whether seed content is bundled as generic fixtures or loaded from an external private content pack for the first app build.
+- The first prototype is local-only; sync/API work is deferred.
+- Seed content in this repo is bundled as generic fixtures only; private or domain-specific content packs stay outside GitHub.
 - Whether the review scheduler should start with a simple Leitner/SM-2 variant or a custom confidence model.
