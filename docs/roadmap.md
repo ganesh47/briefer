@@ -16,8 +16,8 @@
 
 ## App Experience
 
-- Build Home, Brief, Quiz, Review Queue, and Progress screens.
-- Add empty, loading, completion, and incorrect-answer states.
+- Build Home, Brief, Quiz, Review Queue, and Progress screens through the `BrieferFeatures` SwiftUI target.
+- Add empty, completion, and incorrect-answer states.
 - Tune copy and interaction for fast repeated study.
 
 ## Content Pipeline

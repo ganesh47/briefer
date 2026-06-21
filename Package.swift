@@ -9,13 +9,22 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .library(name: "LearningCore", targets: ["LearningCore"])
+        .library(name: "LearningCore", targets: ["LearningCore"]),
+        .library(name: "BrieferFeatures", targets: ["BrieferFeatures"])
     ],
     targets: [
         .target(name: "LearningCore"),
+        .target(
+            name: "BrieferFeatures",
+            dependencies: ["LearningCore"]
+        ),
         .testTarget(
             name: "LearningCoreTests",
             dependencies: ["LearningCore"]
+        ),
+        .testTarget(
+            name: "BrieferFeaturesTests",
+            dependencies: ["BrieferFeatures"]
         )
     ]
 )
