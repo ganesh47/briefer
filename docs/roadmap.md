@@ -11,7 +11,7 @@
 
 - Implement today's review queue.
 - Add quiz answer checking and explanations.
-- Add spaced-repetition scheduling.
+- Add spaced-repetition scheduling through the `LearningCore` review scheduler.
 - Track attempts, confidence, and weak areas.
 
 ## App Experience
