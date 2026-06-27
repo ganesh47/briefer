@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Show toolchain versions
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Swift package tests
+        run: swift test
+
+      - name: Choose simulator destination
+        run: |
+          set -euo pipefail
+          for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15"; do
+            line="$(xcrun simctl list devices available | grep -F "$name (" | grep -v "26\." | head -n 1 || true)"
+            if [[ -n "$line" ]]; then
+              id="$(sed -E "s/.*\(([A-F0-9-]+)\).*/\1/" <<<"$line")"
+              echo "SIM_DESTINATION=id=$id" >> "$GITHUB_ENV"
+              echo "Using simulator: $name ($id)"
+              exit 0
+            fi
+          done
+          for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15" "iPhone 17"; do
+            line="$(xcrun simctl list devices available | grep -F "$name (" | head -n 1 || true)"
+            if [[ -n "$line" ]]; then
+              id="$(sed -E "s/.*\(([A-F0-9-]+)\).*/\1/" <<<"$line")"
+              echo "SIM_DESTINATION=id=$id" >> "$GITHUB_ENV"
+              echo "Using simulator (fallback): $name ($id)"
+              exit 0
+            fi
+          done
+          echo "No preferred iPhone simulator found" >&2
+          xcrun simctl list devices available
+          exit 1
+
+      - name: Resolve Xcode package dependencies
+        run: |
+          xcodebuild -project Briefer.xcodeproj \
+            -resolvePackageDependencies \
+            -scheme BrieferApp
+
+      - name: Build iOS app
+        run: |
+          xcodebuild build \
+            -project Briefer.xcodeproj \
+            -scheme BrieferApp \
+            -destination "$SIM_DESTINATION" \
+            CODE_SIGNING_ALLOWED=NO
